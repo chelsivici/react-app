@@ -61,3 +61,17 @@ body {
 .taskbuttondanger {
   background-color: #b91c1c;
 }
+.addtask {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.addtask input {
+  flex: 1;
+  padding: 6px 8px;
+}
+
+.addtask button {
+  padding: 6px 10px;
+}

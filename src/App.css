@@ -40,3 +40,12 @@
 .read-the-docs {
   color: #888;
 }
+
+.taskinput {
+  flex: 1;
+  padding: 4px 6px;
+  background-color: #020617;
+  border: 1px solid #4b5563;
+  border-radius: 4px;
+  color: #f9fafb;
+}

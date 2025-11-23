@@ -1,15 +1,23 @@
-// input props object with a tasks array
-// output jsx element that contains a list of item components
-// this component maps over the tasks and renders an item for each one
-import Item from "./item"
 
-function TaskList(props) {
-  const { tasks } = props
+import Item from "./item"//אין לי מושג למה זה עובד בשבילי אבל אם זה עושה לך בעיות תשני לI
+
+// input props object with tasks array and handlers
+// output jsx that renders a list of item components
+// this component maps tasks and passes the handlers down to each item
+function TaskList(props) 
+{
+  const { tasks, onDeleteTask, onToggleEdit, onChangeTaskText } = props
 
   return (
     <div className="tasklist">
       {tasks.map(task => (
-        <Item key={task.id} task={task} />
+        <Item
+          key={task.id}
+          task={task}
+          onDeleteTask={onDeleteTask}
+          onToggleEdit={onToggleEdit}
+          onChangeTaskText={onChangeTaskText}
+        />
       ))}
     </div>
   )
