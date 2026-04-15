@@ -12,7 +12,7 @@ export default function RecipeCard({ recipe, onEdit, onDelete }) {
       {recipe.prep_time && <p style={{ margin: '0.25rem 0', color: '#666' }}>⏱ {recipe.prep_time} min</p>}
       {recipe.servings && <p style={{ margin: '0.25rem 0', color: '#666' }}>🍽 {recipe.servings} servings</p>}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem', margin: '0.5rem 0' }}>
-        {recipe.labels.map(label => (
+        {(recipe.labels ?? []).map(label => (
           <span
             key={label.id}
             style={{ background: '#e0e0e0', borderRadius: '999px', padding: '0.1rem 0.5rem', fontSize: '0.8rem' }}
