@@ -113,7 +113,20 @@ router.post('/recipes', async (req, res) => {
       }
     }
     await client.query('COMMIT');
-    res.status(201).json({ ...recipe, labels: [] });
+    // Fetch the full recipe with labels for the response
+    const fullRecipe = await pool.query(`
+      SELECT r.*,
+        COALESCE(
+          json_agg(json_build_object('id', l.id, 'name', l.name))
+          FILTER (WHERE l.id IS NOT NULL), '[]'
+        ) AS labels
+      FROM recipes r
+      LEFT JOIN recipe_labels rl ON r.id = rl.recipe_id
+      LEFT JOIN labels l ON rl.label_id = l.id
+      WHERE r.id = $1
+      GROUP BY r.id
+    `, [recipe.id]);
+    res.status(201).json(fullRecipe.rows[0]);
   } catch (err) {
     await client.query('ROLLBACK');
     res.status(500).json({ error: 'Server error' });
@@ -153,7 +166,20 @@ router.put('/recipes/:id', async (req, res) => {
       }
     }
     await client.query('COMMIT');
-    res.json(recipeResult.rows[0]);
+    // Fetch updated recipe with labels for the response
+    const fullRecipe = await pool.query(`
+      SELECT r.*,
+        COALESCE(
+          json_agg(json_build_object('id', l.id, 'name', l.name))
+          FILTER (WHERE l.id IS NOT NULL), '[]'
+        ) AS labels
+      FROM recipes r
+      LEFT JOIN recipe_labels rl ON r.id = rl.recipe_id
+      LEFT JOIN labels l ON rl.label_id = l.id
+      WHERE r.id = $1
+      GROUP BY r.id
+    `, [id]);
+    res.json(fullRecipe.rows[0]);
   } catch (err) {
     await client.query('ROLLBACK');
     res.status(500).json({ error: 'Server error' });
