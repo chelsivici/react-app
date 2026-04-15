@@ -11,7 +11,10 @@ export default function RecipeForm({ recipe, labels, onSave, onClose }) {
     recipe?.labels?.map(l => l.id) || []
   );
   const [newLabelName, setNewLabelName] = useState('');
+  const [extraLabels, setExtraLabels] = useState([]); // labels created in this session
   const [error, setError] = useState('');
+
+  const allLabels = [...labels, ...extraLabels];
 
   function toggleLabel(id) {
     setSelectedLabelIds(prev =>
@@ -34,9 +37,10 @@ export default function RecipeForm({ recipe, labels, onSave, onClose }) {
         setError(data.error || 'Failed to create label');
         return;
       }
+      // Add to local list and auto-select it — form stays open
+      setExtraLabels(prev => [...prev, data]);
       setSelectedLabelIds(prev => [...prev, data.id]);
       setNewLabelName('');
-      onSave();
     } catch {
       setError('Network error');
     }
@@ -68,7 +72,7 @@ export default function RecipeForm({ recipe, labels, onSave, onClose }) {
         setError(data.error || 'Failed to save recipe');
         return;
       }
-      onSave();
+      onSave(); // closes form and refreshes recipes + labels in parent
     } catch {
       setError('Network error');
     }
@@ -147,7 +151,7 @@ export default function RecipeForm({ recipe, labels, onSave, onClose }) {
           <div style={{ marginBottom: '0.75rem' }}>
             <p style={{ fontWeight: 'bold', marginBottom: '0.25rem' }}>Labels:</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem', marginBottom: '0.5rem' }}>
-              {labels.map(label => (
+              {allLabels.map(label => (
                 <label key={label.id} style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                   <input
                     type="checkbox"
