@@ -36,7 +36,13 @@ export default function HomePage({ user, setUser }) {
   }
 
   async function handleLogout() {
-    await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+    try {
+      const res = await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+      if (!res.ok) { setError('Logout failed'); return; }
+    } catch {
+      setError('Network error during logout');
+      return;
+    }
     setUser(null);
   }
 
