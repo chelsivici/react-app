@@ -54,8 +54,8 @@ export default function RecipeForm({ recipe, labels, onSave, onClose }) {
       ingredients,
       instructions,
       image_url: imageUrl || null,
-      prep_time: prepTime ? parseInt(prepTime) : null,
-      servings: servings ? parseInt(servings) : null,
+      prep_time: prepTime ? parseInt(prepTime, 10) : null,
+      servings: servings ? parseInt(servings, 10) : null,
       label_ids: selectedLabelIds,
     };
     try {

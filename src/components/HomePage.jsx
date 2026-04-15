@@ -37,11 +37,9 @@ export default function HomePage({ user, setUser }) {
 
   async function handleLogout() {
     try {
-      const res = await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
-      if (!res.ok) { setError('Logout failed'); return; }
+      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
     } catch {
-      setError('Network error during logout');
-      return;
+      // ignore — clear client state regardless
     }
     setUser(null);
   }
@@ -96,6 +94,7 @@ export default function HomePage({ user, setUser }) {
         </button>
         {showForm && (
           <RecipeForm
+            key={editingRecipe ? editingRecipe.id : 'new'}
             recipe={editingRecipe}
             labels={labels}
             onSave={handleFormSave}
