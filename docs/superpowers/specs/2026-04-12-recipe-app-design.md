@@ -31,13 +31,12 @@ Vite proxies all `/api/*` requests to `http://localhost:3000` in development. Fr
 src/
 ├── App.jsx              ← React Router setup, auth check
 ├── main.jsx
-├── components/
-│   ├── Navbar.jsx
-│   ├── RecipeList.jsx
-│   ├── RecipeCard.jsx
-│   ├── RecipeForm.jsx   ← shared for add + edit
-│   └── LabelFilter.jsx
-└── pages/
+└── components/
+    ├── Navbar.jsx
+    ├── RecipeList.jsx
+    ├── RecipeCard.jsx
+    ├── RecipeForm.jsx   ← shared for add + edit (modal state lives in HomePage)
+    ├── LabelFilter.jsx
     ├── LoginPage.jsx
     ├── RegisterPage.jsx
     └── HomePage.jsx
@@ -51,7 +50,7 @@ server/
 ├── db.js                ← pg pool connection
 └── routes/
     ├── auth.js          ← register / login / logout / me
-    └── recipes.js       ← recipes CRUD + labels endpoints
+    └── data.js          ← recipes CRUD + labels endpoints
 ```
 
 ---
@@ -71,7 +70,7 @@ server/
 | column | type |
 |---|---|
 | id | SERIAL PRIMARY KEY |
-| user_id | INTEGER REFERENCES users(id) |
+| user_id | INTEGER REFERENCES users(id) ON DELETE CASCADE |
 | title | VARCHAR NOT NULL |
 | ingredients | TEXT NOT NULL |
 | instructions | TEXT NOT NULL |
@@ -94,6 +93,7 @@ Default labels seeded on startup: Breakfast, Lunch, Dinner, Dessert, Vegan, Quic
 |---|---|
 | recipe_id | INTEGER REFERENCES recipes(id) ON DELETE CASCADE |
 | label_id | INTEGER REFERENCES labels(id) ON DELETE CASCADE |
+| PRIMARY KEY | (recipe_id, label_id) |
 
 ---
 
@@ -121,6 +121,8 @@ Default labels seeded on startup: Breakfast, Lunch, Dinner, Dessert, Vegan, Quic
 |---|---|---|
 | GET | `/api/labels` | all labels (default + custom) |
 | POST | `/api/labels` | create custom label |
+
+> Both `/api/recipes` and `/api/labels` are handled inside `server/routes/data.js`. Labels are not deletable via the API.
 
 All recipe and label routes protected by session middleware (returns 401 if not logged in).
 
@@ -151,6 +153,8 @@ All recipe and label routes protected by session middleware (returns 401 if not 
 - All API calls use `async/await`
 - Always check `response.ok`; show error message to user on failure
 - Components fetch their own data in `useEffect`
+- All `fetch` calls must include `credentials: 'include'` so the session cookie is sent (Vite and Express run on different ports in dev)
+- Session secret read from `process.env.SESSION_SECRET`
 
 ---
 
@@ -158,7 +162,7 @@ All recipe and label routes protected by session middleware (returns 401 if not 
 
 - [x] Node.js + Express backend
 - [x] PostgreSQL database
-- [x] 2+ tables with logical relations (users → recipes many-to-many with labels)
+- [x] 2+ tables with logical relations (users → recipes 1-to-many; recipes ↔ labels many-to-many via junction table)
 - [x] Register + Login + Session + bcrypt
 - [x] GET /me and POST /logout
 - [x] Full CRUD for recipes
