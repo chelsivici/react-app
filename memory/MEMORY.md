@@ -1,0 +1,2 @@
+- [Recipe App Requirements](project_requirements.md) — school fullstack project, strict docx requirements for auth/CRUD/React screens
+- [User Profile](user_profile.md) — Israeli student, commits as chelsivici, casual communication style

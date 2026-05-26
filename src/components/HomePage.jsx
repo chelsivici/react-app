@@ -3,6 +3,7 @@ import Navbar from './Navbar';
 import LabelFilter from './LabelFilter';
 import RecipeList from './RecipeList';
 import RecipeForm from './RecipeForm';
+import RecipeDetail from './RecipeDetail';
 
 export default function HomePage({ user, setUser }) {
   const [recipes, setRecipes] = useState([]);
@@ -11,6 +12,7 @@ export default function HomePage({ user, setUser }) {
   const [showForm, setShowForm] = useState(false);
   const [editingRecipe, setEditingRecipe] = useState(null);
   const [error, setError] = useState('');
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
 
   useEffect(() => {
     fetchRecipes();
@@ -102,7 +104,8 @@ export default function HomePage({ user, setUser }) {
           />
         )}
         <LabelFilter labels={labels} activeLabels={activeLabels} onToggle={toggleLabel} />
-        <RecipeList recipes={filteredRecipes} onEdit={handleEdit} onDelete={handleDelete} />
+        <RecipeList recipes={filteredRecipes} onEdit={handleEdit} onDelete={handleDelete} onView={setSelectedRecipe} />
+        {selectedRecipe && <RecipeDetail recipe={selectedRecipe} onClose={() => setSelectedRecipe(null)} />}
       </div>
     </div>
   );

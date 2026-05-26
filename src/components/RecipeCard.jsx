@@ -1,6 +1,9 @@
-export default function RecipeCard({ recipe, onEdit, onDelete }) {
+export default function RecipeCard({ recipe, onEdit, onDelete, onView }) {
   return (
-    <div style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '1rem', marginBottom: '1rem' }}>
+    <div
+      onClick={onView}
+      style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '1rem', marginBottom: '1rem', cursor: 'pointer' }}
+    >
       {recipe.image_url && (
         <img
           src={recipe.image_url}
@@ -22,8 +25,8 @@ export default function RecipeCard({ recipe, onEdit, onDelete }) {
         ))}
       </div>
       <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
-        <button onClick={() => onEdit(recipe)}>Edit</button>
-        <button onClick={() => onDelete(recipe.id)} style={{ color: 'red' }}>Delete</button>
+        <button onClick={e => { e.stopPropagation(); onEdit(recipe); }}>Edit</button>
+        <button onClick={e => { e.stopPropagation(); onDelete(recipe.id); }} style={{ color: 'red' }}>Delete</button>
       </div>
     </div>
   );
