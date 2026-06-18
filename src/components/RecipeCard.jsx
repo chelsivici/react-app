@@ -1,3 +1,19 @@
+const TAG_COLORS = [
+  '#6366f1', // indigo
+  '#0ea5e9', // sky
+  '#10b981', // emerald
+  '#f59e0b', // amber
+  '#ef4444', // rose
+  '#8b5cf6', // violet
+  '#ec4899', // pink
+  '#14b8a6', // teal
+  '#f97316', // orange
+];
+
+function tagColor(id) {
+  return TAG_COLORS[id % TAG_COLORS.length];
+}
+
 export default function RecipeCard({ recipe, onEdit, onDelete, onView }) {
   return (
     <div
@@ -18,7 +34,15 @@ export default function RecipeCard({ recipe, onEdit, onDelete, onView }) {
         {(recipe.labels ?? []).map(label => (
           <span
             key={label.id}
-            style={{ background: '#e0e0e0', borderRadius: '999px', padding: '0.1rem 0.5rem', fontSize: '0.8rem' }}
+            style={{
+              background: tagColor(label.id),
+              color: '#fff',
+              borderRadius: '999px',
+              padding: '0.2rem 0.65rem',
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              letterSpacing: '0.02em',
+            }}
           >
             {label.name}
           </span>
